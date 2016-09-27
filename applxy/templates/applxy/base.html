@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Default title{% endblock %} - Home Page for test </title>
+</head>
+<body>
+	<h1> Login in </h1>
+	<h3>Current User:
+		{% if request.user.is_authenticated %}
+   			{{ request.user.username }}，您好！
+		{% else %}
+    		anonymity
+		{% endif %}
+	</h3>
+	{% include 'applxy/login.html' %}
+
+
+	<h1> Register </h1>
+
+	{% include 'applxy/register.html' %}
+
+
+	<h1> Change Password </h1>
+
+	{% include 'applxy/changePasswd.html' %}
+
+
+	<h1> Purchase History </h1>
+
+	{% include 'applxy/purchageHistory.html' %}
+
+	<h1> LogOut </h1>
+
+	{% include 'applxy/logOut.html' %}
+ 
+</body>
+</html>

@@ -1,0 +1,7 @@
+	<form action="{% url 'login' %}" method='post'>
+		{% csrf_token %}
+		{{ formLogin }}
+		<input type="submit" value="提交">
+	</form>
+
+

@@ -1,0 +1,13 @@
+<!--<form action="{% url 'purchaseHistory' %}" method="post">-->
+	<!--{% csrf_token %}-->
+	<!--user name: <input type="text"/>-->
+	<!--<input type="submit" value="Get Purchase History"/>-->
+<!--</form>-->
+
+<form action="{% url 'logOut' %}" method='post'>
+	{% csrf_token %}
+	{{ emptyForm }}
+	<input type="submit" value="log out">
+</form>
+
+

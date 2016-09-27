@@ -1,0 +1,21 @@
+<!--<form action="{% url 'purchaseHistory' %}" method="post">-->
+	<!--{% csrf_token %}-->
+	<!--user name: <input type="text"/>-->
+	<!--<input type="submit" value="Get Purchase History"/>-->
+<!--</form>-->
+
+<form action="{% url 'purchaseHistory' %}" method='post'>
+	{% csrf_token %}
+	{{ emptyForm }}
+	<input type="submit" value="Get Purchase History">
+</form>
+
+
+<ul>
+	{% for time, days in purchaseHis.items %}
+	    <li>{{ time }}: {{ days }}</li>
+	{% empty %}
+	    <li>抱歉，列表为空</li>
+	{% endfor %}
+</ul>
+
