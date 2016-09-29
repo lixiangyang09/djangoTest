@@ -1,7 +1,7 @@
 #forms
 
 from django import forms
-
+from .models import *
 
 class EmptyForm(forms.Form):
     pass
@@ -23,3 +23,14 @@ class FormRegister(forms.Form):
     confirm = forms.CharField(max_length=200)
     email = forms.EmailField(max_length=200)
 
+
+class FormProduct(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = "__all__"
+    ffff = forms.ModelChoiceField(queryset=Product.objects.all(),
+                                  widget=forms.RadioSelect())
+
+class FormProduct2(forms.Form):
+    ffff = forms.ModelChoiceField(queryset=Product.objects.all(),
+                                  widget=forms.RadioSelect())

@@ -41,3 +41,12 @@ class Purchase(models.Model):
 
     def __str__(self):
         return self.time.strftime('%Y-%m-%d %H:%M:%S')
+
+
+class Product(models.Model):
+    money = models.FloatField()
+    days = models.IntegerField()
+
+    def __str__(self):
+        return "$ %.1f : %d days" % (self.money, self.days)
+

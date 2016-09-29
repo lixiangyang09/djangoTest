@@ -21,10 +21,18 @@ def index(request):
     formLogin = FormLogin()
     formChangePasswd = FormChangePasswd()
     formRegister = FormRegister()
-    formEmpty = EmptyForm()
+    # formEmpty = EmptyForm()
+    formProduct = FormProduct2()
+    res = {}
+    dbRes = Product.objects.all()
+    for hs in dbRes:
+        res[hs.money] = hs.days
+
     return render(request, 'applxy/index.html', {'formLogin': formLogin,
                                                  'formChangePasswd': formChangePasswd,
-                                                 'emptyForm': formEmpty,
+                                                 #'emptyForm': formEmpty,
+                                                 'formProduct': formProduct,
+                                                 'products': res,
                                                  'formRegister': formRegister})
     # return JsonResponse({'foo':'bar'})
 
@@ -103,3 +111,10 @@ def changePasswd(request):
         return HttpResponse("please login first")
 
 
+def product(request):
+    test = FormProduct2(request.POST)
+    if test.is_valid():
+        res = test.cleaned_data['ffff'].pk
+        return HttpResponse(res)
+    else:
+        return HttpResponse("invalid form")

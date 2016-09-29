@@ -1,0 +1,23 @@
+
+<form action="{% url 'product' %}" method='post'>
+	{% csrf_token %}
+
+	<!--{% for days, price in products.items %}-->
+	    <!--&lt;!&ndash;<li>{{ price }}: {{ days }}</li>&ndash;&gt;-->
+		<!--<input type="radio" /> {{ price }}: {{ days }}-->
+        <!--<br>-->
+    <!--{% empty %}-->
+	    <!--抱歉，列表为空-->
+	<!--{% endfor %}-->
+
+    {% for radio in formProduct.ffff %}
+        <!--<div >-->
+            <!--{{ radio }}-->
+        <!--</div>-->
+    {{ radio }}
+    <br>
+    {% endfor %}
+	<input type="submit" value="buy">
+</form>
+
+

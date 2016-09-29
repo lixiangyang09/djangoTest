@@ -27,5 +27,5 @@ urlpatterns = [
     url(r'^v1/register', applxy_views.register, name='register'),
     url(r'^v1/changePasswd', applxy_views.changePasswd, name='changePasswd'),
     url(r'^v1/purchaseHistory', applxy_views.purchaseHistory, name='purchaseHistory'),
-
+    url(r'^v1/product', applxy_views.product, name='product'),
 ]
