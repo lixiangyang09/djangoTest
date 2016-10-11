@@ -10,6 +10,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as auth_login
 
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
+
 def index(request):
     # if request.method == 'POST':
     #     form = AddForm(request.POST)
@@ -22,17 +25,14 @@ def index(request):
     formChangePasswd = FormChangePasswd()
     formRegister = FormRegister()
     # formEmpty = EmptyForm()
-    formProduct = FormProduct2()
-    res = {}
-    dbRes = Product.objects.all()
-    for hs in dbRes:
-        res[hs.money] = hs.days
+    formProduct = FormProduct2(initial={'ffff': Product.objects.all()[0].pk })
+    #formProduct = FormProduct2()
+
 
     return render(request, 'applxy/index.html', {'formLogin': formLogin,
                                                  'formChangePasswd': formChangePasswd,
                                                  #'emptyForm': formEmpty,
                                                  'formProduct': formProduct,
-                                                 'products': res,
                                                  'formRegister': formRegister})
     # return JsonResponse({'foo':'bar'})
 
@@ -50,7 +50,8 @@ def login(request):
         user = authenticate(username=name_in, password=passwd_in)
         if user is not None:
             auth_login(request, user)
-            return HttpResponse("login successfully")
+            #return HttpResponse("login successfully")
+            return redirect(reverse('index', args=[]))
         else:
             return HttpResponse("please register first")
     return HttpResponse("invalid form")
@@ -58,8 +59,8 @@ def login(request):
 
 def logOut(request):
     logout(request)
-    return HttpResponse("logout successfully")
-
+    #return HttpResponse("logout successfully")
+    return redirect(reverse('index', args=[]))
 
 def register(request):
     formRegister = FormRegister(request.POST)
@@ -74,7 +75,8 @@ def register(request):
         email_in = formRegister.cleaned_data['email']
         User.objects.create_user(name_in, email_in, passwd_in)
         Person(name=name_in).save()
-        return HttpResponse("register successfully")
+        #return HttpResponse("register successfully")
+        return redirect(reverse('index', args=[]))
     else:
         return HttpResponse("input form invalid")
 
@@ -85,8 +87,8 @@ def purchaseHistory(request):
         name_in = request.user
         res = {}
         dbRes = Person.objects.get(name=name_in).purchase_set.all()
-        for hs in dbRes:
-            res[hs.time] = hs.days
+        for id, hs in dbRes:
+            res[id] = hs.time + hs.days + hs.price
         return render(request, 'applxy/index.html', {'purchaseHis': res})
     else:
         return HttpResponse("please login first")
@@ -112,9 +114,15 @@ def changePasswd(request):
 
 
 def product(request):
-    test = FormProduct2(request.POST)
-    if test.is_valid():
-        res = test.cleaned_data['ffff'].pk
-        return HttpResponse(res)
+    if request.user.is_authenticated:
+        test = FormProduct2(request.POST)
+        if test.is_valid():
+            id = test.cleaned_data['ffff'].id
+            return HttpResponse(id)
+            selected = Product.objects.all()[id]
+            name_in = request.user
+            user = Person.objects.get(name=name_in)
+            user.purchase_set.create(days=selected.days, price=selected.price)
+            return purchaseHistory(request)
     else:
-        return HttpResponse("invalid form")
+        return HttpResponse("please login first")

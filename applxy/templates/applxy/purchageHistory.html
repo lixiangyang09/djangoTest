@@ -12,8 +12,8 @@
 
 
 <ul>
-	{% for time, days in purchaseHis.items %}
-	    <li>{{ time }}: {{ days }}</li>
+	{% for id, item in purchaseHis.items %}
+	    <li>{{ id }}: {{ item }}</li>
 	{% empty %}
 	    <li>抱歉，列表为空</li>
 	{% endfor %}

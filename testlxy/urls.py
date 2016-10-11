@@ -19,7 +19,7 @@ from applxy import views as applxy_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', applxy_views.index),
+    url(r'^$', applxy_views.index, name="index"),
     url(r'^add/(\d+)/(\d+)/$', applxy_views.add, name='add'),
 
     url(r'^v1/login$', applxy_views.login, name='login'),

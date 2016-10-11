@@ -32,5 +32,4 @@ class FormProduct(forms.ModelForm):
                                   widget=forms.RadioSelect())
 
 class FormProduct2(forms.Form):
-    ffff = forms.ModelChoiceField(queryset=Product.objects.all(),
-                                  widget=forms.RadioSelect())
+    ffff = forms.ModelChoiceField(queryset=Product.objects.all(), widget=forms.RadioSelect(), empty_label=None)

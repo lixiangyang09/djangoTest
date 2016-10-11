@@ -38,15 +38,16 @@ class Purchase(models.Model):
     list = models.ForeignKey(Person, on_delete=models.CASCADE)
     time = models.DateTimeField('purchase time', default=timezone.now)
     days = models.IntegerField(default=0)
+    price = models.FloatField(default=0)
 
     def __str__(self):
         return self.time.strftime('%Y-%m-%d %H:%M:%S')
 
 
 class Product(models.Model):
-    money = models.FloatField()
+    price = models.FloatField()
     days = models.IntegerField()
 
     def __str__(self):
-        return "$ %.1f : %d days" % (self.money, self.days)
+        return "$ %.1f : %d days" % (self.price, self.days)
 
