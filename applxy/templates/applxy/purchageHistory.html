@@ -1,19 +1,15 @@
-<!--<form action="{% url 'purchaseHistory' %}" method="post">-->
-	<!--{% csrf_token %}-->
-	<!--user name: <input type="text"/>-->
-	<!--<input type="submit" value="Get Purchase History"/>-->
-<!--</form>-->
 
-<form action="{% url 'purchaseHistory' %}" method='post'>
-	{% csrf_token %}
-	<!--{{ emptyForm }}-->
-	<input type="submit" value="Get Purchase History">
-</form>
+
+<!--<form action="{% url 'purchaseHistory' %}" method='post'>-->
+	<!--{% csrf_token %}-->
+	<!--&lt;!&ndash;{{ emptyForm }}&ndash;&gt;-->
+	<!--<input type="submit" value="Get Purchase History">-->
+<!--</form>-->
 
 
 <ul>
-	{% for id, item in purchaseHis.items %}
-	    <li>{{ id }}: {{ item }}</li>
+	{% for item in purchaseHis %}
+	    <li>{{ item }}</li>
 	{% empty %}
 	    <li>抱歉，列表为空</li>
 	{% endfor %}

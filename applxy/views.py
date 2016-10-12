@@ -25,15 +25,24 @@ def index(request):
     formChangePasswd = FormChangePasswd()
     formRegister = FormRegister()
     # formEmpty = EmptyForm()
-    formProduct = FormProduct2(initial={'ffff': Product.objects.all()[0].pk })
+    formProduct = FormProduct2(initial={'ffff': Product.objects.all()[0].pk})
     #formProduct = FormProduct2()
 
+    # if authorized
+    res = []
+    if request.user.is_authenticated:
+        name_in = request.user
+
+        dbRes = Person.objects.get(name=name_in).purchase_set.all()
+        for hs in dbRes:
+            res.append(hs.time.strftime('%Y-%m-%d %H:%M:%S') + " " + str(hs.days) + " " + str(hs.price))
 
     return render(request, 'applxy/index.html', {'formLogin': formLogin,
                                                  'formChangePasswd': formChangePasswd,
                                                  #'emptyForm': formEmpty,
                                                  'formProduct': formProduct,
-                                                 'formRegister': formRegister})
+                                                 'formRegister': formRegister,
+                                                 'purchaseHis': res})
     # return JsonResponse({'foo':'bar'})
 
 
@@ -53,7 +62,7 @@ def login(request):
             #return HttpResponse("login successfully")
             return redirect(reverse('index', args=[]))
         else:
-            return HttpResponse("please register first")
+            return HttpResponse("wrong name or password")
     return HttpResponse("invalid form")
 
 
@@ -85,11 +94,11 @@ def purchaseHistory(request):
     # if authorized
     if request.user.is_authenticated:
         name_in = request.user
-        res = {}
+        res = []
         dbRes = Person.objects.get(name=name_in).purchase_set.all()
-        for id, hs in dbRes:
-            res[id] = hs.time + hs.days + hs.price
-        return render(request, 'applxy/index.html', {'purchaseHis': res})
+        for hs in dbRes:
+            res.append(hs.time.strftime('%Y-%m-%d %H:%M:%S') + " " + str(hs.days) + " " + str(hs.price))
+        return index(request)
     else:
         return HttpResponse("please login first")
 
@@ -99,14 +108,18 @@ def changePasswd(request):
     if request.user.is_authenticated:
         formChangePasswd = FormChangePasswd(request.POST)
         if formChangePasswd.is_valid():
-            user = User.objects.get(name=request.user)
-            new_in = formChangePasswd.cleaned_data['new']
-            confirm_in = formChangePasswd.cleaned_data['confirm']
-            if (new_in != confirm_in):
-                return HttpResponse("password inconsistent")
-            user.passwd = new_in
-            user.save()
-            return HttpResponse("update password successfully")
+            user = request.user
+            old_in = formChangePasswd.cleaned_data['old']
+            if user.check_password(old_in):
+                new_in = formChangePasswd.cleaned_data['new']
+                confirm_in = formChangePasswd.cleaned_data['confirm']
+                if (new_in != confirm_in):
+                    return HttpResponse("password inconsistent")
+                user.set_password(new_in)
+                user.save()
+                return HttpResponse("update password successfully")
+            else:
+                return HttpResponse("Invalid old passwd")
         else:
             return HttpResponse("Invalid Form")
     else:
@@ -117,12 +130,10 @@ def product(request):
     if request.user.is_authenticated:
         test = FormProduct2(request.POST)
         if test.is_valid():
-            id = test.cleaned_data['ffff'].id
-            return HttpResponse(id)
-            selected = Product.objects.all()[id]
+            selected = test.cleaned_data['ffff']
             name_in = request.user
             user = Person.objects.get(name=name_in)
             user.purchase_set.create(days=selected.days, price=selected.price)
-            return purchaseHistory(request)
+            return index(request)
     else:
         return HttpResponse("please login first")
